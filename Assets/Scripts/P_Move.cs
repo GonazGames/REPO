@@ -12,6 +12,8 @@ public class P_Move : MonoBehaviour
     // Private variables that are not visible in the Inspector
     private bool isGrounded = true;     // Is the player on the ground?
     private bool canDoubleJump = false; // Can the player double jump?
+    private string run_ANIMATION = "run";
+    private Animator anim;
 
     private Rigidbody2D rb;            // Reference to the Rigidbody2D component
 
@@ -19,10 +21,12 @@ public class P_Move : MonoBehaviour
     {
         // Get the Rigidbody2D component on this GameObject
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
     void Update()
     {
+        AnimatePlayer();
         // Get the horizontal input axis (left/right arrow keys or A/D keys)
         float horizontal = Input.GetAxis("Horizontal");
 
@@ -67,4 +71,29 @@ public class P_Move : MonoBehaviour
             canDoubleJump = false;  // Set canDoubleJump to false so the player can't double jump again until they jump from the ground
         }
     }
+
+    void AnimatePlayer()
+{
+    if (anim == null)
+    {
+        anim = GetComponent<Animator>();
+    }
+
+    float horizontal = Input.GetAxis("Horizontal");
+
+    if (horizontal > 0)
+    {
+        anim.SetBool(run_ANIMATION, true);
+        transform.localScale = new Vector2(1, 1);
+    }
+    else if (horizontal < 0)
+    {
+        anim.SetBool(run_ANIMATION, true);
+        transform.localScale = new Vector2(-1, 1);
+    }
+    else
+    {
+        anim.SetBool(run_ANIMATION, false);
+    }
+}
 }
