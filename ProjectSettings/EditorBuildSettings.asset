@@ -6,9 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Gameplay.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/GG_LOGO.unity
+    guid: ab68b38d9468b3744a1e1848e38c4cb3
+  - enabled: 1
+    path: Assets/Scenes/Menu_cat.unity
+    guid: 5c8167a919f3b6c41ac88cb55c067316
   - enabled: 1
     path: Assets/Scenes/Menu_Main.unity
     guid: 48f25a36cc8a17d4883c2643a97ddbc7
+  - enabled: 1
+    path: Assets/Scenes/Gameplay.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}

@@ -8,6 +8,7 @@ public class P_Move : MonoBehaviour
     public float speed = 5f;            // Horizontal movement speed
     public float jumpForce = 10f;       // Jump force
     public float doubleJumpForce = 8f;  // Double jump force
+    public float maxJumpVelocity = 10f; // Maximum upward velocity during jumps
 
     // Private variables that are not visible in the Inspector
     private bool isGrounded = true;     // Is the player on the ground?
@@ -21,6 +22,7 @@ public class P_Move : MonoBehaviour
     {
         // Get the Rigidbody2D component on this GameObject
         rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = 2f; // Set a higher gravity scale
         anim = GetComponent<Animator>();
     }
 
@@ -32,6 +34,12 @@ public class P_Move : MonoBehaviour
 
         // Create a new Vector2 for the horizontal movement, with the desired speed and the current vertical velocity
         Vector2 movement = new Vector2(horizontal * speed, rb.velocity.y);
+
+        // Limit the upward velocity during jumps
+        if (movement.y > maxJumpVelocity)
+        {
+            movement.y = maxJumpVelocity;
+        }
 
         // Set the Rigidbody2D velocity to the movement Vector2
         rb.velocity = movement;
@@ -51,26 +59,44 @@ public class P_Move : MonoBehaviour
         {
             if (isGrounded)  // If the player is on the ground
             {
-                rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);  // Add an upward force to the Rigidbody2D
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);  // Set the upward velocity to the jump force
                 isGrounded = false;  // Set isGrounded to false so the player can't jump again until they land
                 canDoubleJump = true; // Set canDoubleJump to true so the player can double jump
             }
             else if (canDoubleJump)  // If the player is in the air and can double jump
             {
-                rb.AddForce(new Vector2(0, doubleJumpForce), ForceMode2D.Impulse);  // Add an upward force to the Rigidbody2D
+                rb.velocity = new Vector2(rb.velocity.x, doubleJumpForce);  // Set the upward velocity to the double jump force
                 canDoubleJump = false;  // Set canDoubleJump to false so the player can't double jump again until they land
             }
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+ void OnCollisionEnter2D(Collision2D collision)
+{
+    if (collision.gameObject.CompareTag("Ground"))  // If the collision object has the "Ground" tag
     {
-        if (collision.gameObject.CompareTag("Ground"))  // If the collision object has the "Ground" tag
+        isGrounded = true;     // Set isGrounded to true so the player can jump again
+        canDoubleJump = false;  // Set canDoubleJump to false so the player can't double jump again until they jump from the ground
+
+        // Check if the collision was with the side of the platform
+        ContactPoint2D[] contacts = new ContactPoint2D[collision.contactCount];
+        collision.GetContacts(contacts);
+
+        foreach (ContactPoint2D contact in contacts)
         {
-            isGrounded = true;     // Set isGrounded to true so the player can jump again
-            canDoubleJump = false;  // Set canDoubleJump to false so the player can't double jump again until they jump from the ground
+            if (Mathf.Abs(contact.normal.y) < 0.5f)  // If the collision normal is more horizontal than vertical
+            {
+                // Move the player to the side of the platform
+                float direction = Mathf.Sign(contact.normal.x);
+                transform.position += new Vector3(contact.normal.x * 0.1f, 0, 0);
+
+                // Set the player's velocity to zero in the x direction
+                rb.velocity = new Vector2(0, rb.velocity.y);
+            }
         }
     }
+}
+
 
     void AnimatePlayer()
 {
