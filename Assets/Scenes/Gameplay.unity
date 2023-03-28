@@ -1710,6 +1710,10 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2770538931098366522, guid: 819a45717aea35d4faa59384352176a0, type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2770538931098366522, guid: 819a45717aea35d4faa59384352176a0, type: 3}
       propertyPath: m_Constraints
       value: 4
       objectReference: {fileID: 0}
