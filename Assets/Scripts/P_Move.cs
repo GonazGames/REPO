@@ -82,18 +82,6 @@ public class P_Move : MonoBehaviour
         ContactPoint2D[] contacts = new ContactPoint2D[collision.contactCount];
         collision.GetContacts(contacts);
 
-        foreach (ContactPoint2D contact in contacts)
-        {
-            if (Mathf.Abs(contact.normal.y) < 0.5f)  // If the collision normal is more horizontal than vertical
-            {
-                // Move the player to the side of the platform
-                float direction = Mathf.Sign(contact.normal.x);
-                transform.position += new Vector3(contact.normal.x * 0.1f, 0, 0);
-
-                // Set the player's velocity to zero in the x direction
-                rb.velocity = new Vector2(0, rb.velocity.y);
-            }
-        }
     }
 }
 
